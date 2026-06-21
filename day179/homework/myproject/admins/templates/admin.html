@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .admin-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .admin-card h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .admin-card p {
+            font-size: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-card">
+        <h1>{{ admin_name }}</h1>
+        <p>{{ role }}</p>
+    </div>
+</body>
+</html>
