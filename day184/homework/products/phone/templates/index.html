@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phones</title>
+</head>
+
+<body>
+
+<h1>All Phones</h1>
+
+{% for phone in all_phones %}
+
+    <h2>
+        <a href="/phone/detail/{{ phone.id }}/">
+            {{ phone.name }}
+        </a>
+    </h2>
+
+{% endfor %}
+
+</body>
+</html>

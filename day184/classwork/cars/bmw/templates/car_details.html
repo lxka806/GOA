@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>{{ car.name }}</h1>
+
+    <p>{{ car.model }}</p>
+    <p>{{ car.year }}</p>
+    <p>{{ car.color }}</p>
+
+    <a href="/bmw/delete/{{ car.id }}/">
+        <button>Delete</button>
+    </a>
+
+    <a href="/bmw/">Back</a>
+</body>
+</html>
