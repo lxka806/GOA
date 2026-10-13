@@ -8,6 +8,7 @@ def add_task(request):
         create_task(request.POST)
         return redirect("main")
 
+    # get all todos 
     tasks = Task.objects.all()
 
     return render(request, "index.html", {
