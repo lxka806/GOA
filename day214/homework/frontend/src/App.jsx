@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 function App() {
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editedTitle, setEditedTitle] = useState("");
 
   const getTasks = async () => {
     try {
@@ -35,6 +37,43 @@ function App() {
 
       setTask("");
       await getTasks();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const startEditing = (task) => {
+    setEditingTaskId(task.id);
+    setEditedTitle(task.title);
+  };
+
+  const cancelEditing = () => {
+    setEditingTaskId(null);
+    setEditedTitle("");
+  };
+
+  const handleEditSubmit = async (e, taskId) => {
+    e.preventDefault();
+
+    const title = editedTitle.trim();
+    if (!title) return;
+
+    try {
+      await api.patch(`tasks/${taskId}/`, { title });
+      cancelEditing();
+      await getTasks();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (taskId) => {
+    try {
+      await api.delete(`tasks/${taskId}/`);
+      setTasks((currentTasks) =>
+        currentTasks.filter((currentTask) => currentTask.id !== taskId),
+      );
+      if (editingTaskId === taskId) cancelEditing();
     } catch (error) {
       console.error(error);
     }
@@ -103,9 +142,56 @@ function App() {
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 font-bold text-indigo-400 transition group-hover:bg-indigo-500/20">
                   {task.id}
                 </div>
-                <h3 className="min-w-0 flex-1 break-words text-base font-medium text-slate-200">
-                  {task.title}
-                </h3>
+                {editingTaskId === task.id ? (
+                  <form
+                    onSubmit={(e) => handleEditSubmit(e, task.id)}
+                    className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row"
+                  >
+                    <input
+                      type="text"
+                      value={editedTitle}
+                      onChange={(e) => setEditedTitle(e.target.value)}
+                      aria-label={`Edit task: ${task.title}`}
+                      className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-white outline-none focus:border-indigo-500"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      disabled={!editedTitle.trim()}
+                      className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={cancelEditing}
+                      className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-slate-800"
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    <h3 className="min-w-0 flex-1 break-words text-base font-medium text-slate-200">
+                      {task.title}
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => startEditing(task)}
+                      className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-indigo-500 hover:text-white"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(task.id)}
+                      aria-label={`Delete task: ${task.title}`}
+                      className="rounded-lg border border-red-900 px-4 py-2 text-sm font-semibold text-red-300 transition hover:border-red-500 hover:bg-red-950/50 hover:text-white"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
                 <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-400"></span>
               </div>
             ))
